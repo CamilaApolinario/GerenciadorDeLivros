@@ -82,7 +82,7 @@ namespace GerenciadorDeLivrosLidos.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,AutorId,Lido")] Livro livro)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,AutorId,Lido")] Livro livro)
         {
             try
             {
