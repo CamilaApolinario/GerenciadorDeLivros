@@ -4,11 +4,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Livros </h2>
-
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<h1>Livros Lidos</h1>
+
 <table class="table">
     <thead>
         <tr>
@@ -38,7 +39,7 @@
                     @Html.DisplayFor(modelItem => item.Autor)
                 </td>
                 <td>
-                    @Html.CheckBoxFor(modelItem => item.Lido)
+                    @Html.CheckBoxFor(modelItem => item.Lido, new { @disabled = "disabled" })
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -46,6 +47,53 @@
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
+        }
+    </tbody>
+</table>
+
+<h1>Livros não Lidos</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Titulo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Autor)
+            </th>
+            <th>
+                Lido
+            </th>
+            <th>
+                Ações
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.LivrosNaoLidos != null)
+        {
+
+            @foreach (var item in ViewBag.LivrosNaoLidos as IList<Livro>)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Titulo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Autor)
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(modelItem => item.Lido, new { @disabled = "disabled" })
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>

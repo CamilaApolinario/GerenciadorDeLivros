@@ -19,7 +19,9 @@ namespace GerenciadorDeLivrosLidos.Controllers
         // GET: Livros
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Livros.Include(x => x.Autor).ToListAsync());
+            ViewBag.LivrosNaoLidos = _context.Livros.Include(x => x.Autor).Where(x => x.Lido == false).ToList();
+
+            return View(_context.Livros.Include(x => x.Autor).Where(x => x.Lido == true).ToList());
         }
 
         public async Task<IActionResult> Details(int? id)
