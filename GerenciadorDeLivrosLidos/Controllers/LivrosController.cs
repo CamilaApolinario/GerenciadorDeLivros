@@ -19,9 +19,9 @@ namespace GerenciadorDeLivrosLidos.Controllers
         // GET: Livros
         public async Task<IActionResult> Index()
         {
-            ViewBag.LivrosNaoLidos = _context.Livros.Include(x => x.Autor).Where(x => x.Lido == false).ToList();
+            ViewBag.LivrosNaoLidos = _context.Livros.Include(x => x.Autor).Where(x => x.Lido == false).OrderBy(x => x.Autor.Nome).ToList();
 
-            return View(_context.Livros.Include(x => x.Autor).Where(x => x.Lido == true).ToList());
+            return View(_context.Livros.Include(x => x.Autor).Where(x => x.Lido == true).OrderBy(x => x.Autor.Nome).ToList());
         }
 
         public async Task<IActionResult> Details(int? id)

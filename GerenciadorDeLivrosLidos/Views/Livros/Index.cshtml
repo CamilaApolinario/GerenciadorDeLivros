@@ -36,7 +36,7 @@
                     @Html.DisplayFor(modelItem => item.Titulo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Autor)
+                    @Html.DisplayFor(modelItem => item.Autor.Nome)
                 </td>
                 <td>
                     @Html.CheckBoxFor(modelItem => item.Lido, new { @disabled = "disabled" })
@@ -82,7 +82,7 @@
                         @Html.DisplayFor(modelItem => item.Titulo)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Autor)
+                        @Html.DisplayFor(modelItem => item.Autor.Nome)
                     </td>
                     <td>
                         @Html.CheckBoxFor(modelItem => item.Lido, new { @disabled = "disabled" })
