@@ -1,4 +1,5 @@
-﻿using GerenciadorDeLivrosLidos.Models;
+﻿using GerenciadorDeLivrosLidos.Data;
+using GerenciadorDeLivrosLidos.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -8,9 +9,10 @@ namespace GerenciadorDeLivrosLidos.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, SeedingService seedService)
         {
             _logger = logger;
+            seedService.Seed();
         }
 
         public IActionResult Index()

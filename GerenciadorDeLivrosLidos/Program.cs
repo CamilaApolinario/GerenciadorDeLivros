@@ -14,8 +14,6 @@ builder.Services.AddScoped<SeedingService>();
 
 var app = builder.Build();
 
-SeedingService seedingService = new();
-seedingService.Seed();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -34,6 +32,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Livros}/{action=Index}/{id?}");
 
 app.Run();

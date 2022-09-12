@@ -1,23 +1,25 @@
 ﻿using GerenciadorDeLivrosLidos.Data;
 using GerenciadorDeLivrosLidos.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace GerenciadorDeLivrosLidos.Controllers
 {
-    public class LivroController : Controller
+    public class LivrosController : Controller
     {
         private readonly GerenciadorContext _context;
 
-        public LivroController(GerenciadorContext context)
+        public LivrosController(GerenciadorContext context, SeedingService seedService)
         {
             _context = context;
+            seedService.Seed();
         }
 
         // GET: Livros
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Livros.ToListAsync());
+            return View(await _context.Livros.Include(x => x.Autor).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -27,7 +29,7 @@ namespace GerenciadorDeLivrosLidos.Controllers
                 return NotFound();
             }
 
-            var livros = await _context.Livros
+            var livros = await _context.Livros.Include(x => x.Autor)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (livros == null)
             {
@@ -39,20 +41,22 @@ namespace GerenciadorDeLivrosLidos.Controllers
 
         public IActionResult Create()
         {
+            var autores = _context.Autores.ToList();
+            var selectList = new SelectList(autores, "Id", "Nome");
+
+            ViewBag.Autores = selectList;
+
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Titulo")] Livro livro)
+        public async Task<IActionResult> Create([Bind("Id,Titulo,AutorId,Lido")] Livro livro)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(livro);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(livro);
+            livro.Autor = _context.Autores.Find(livro.AutorId);
+            _context.Add(livro);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -63,43 +67,41 @@ namespace GerenciadorDeLivrosLidos.Controllers
             }
 
             var livros = await _context.Livros.FindAsync(id);
+
+            var autores = _context.Autores.ToList();
+            var selectList = new SelectList(autores, "Id", "Nome");
+
+            ViewBag.Autores = selectList;
+
             if (livros == null)
             {
                 return NotFound();
             }
             return View(livros);
         }
-       
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Livro livro)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,AutorId,Lido")] Livro livro)
         {
-            if (id != livro.Id)
+            try
             {
-                return NotFound();
+                livro.Autor = _context.Autores.Find(livro.AutorId);
+                _context.Update(livro);
+                await _context.SaveChangesAsync();
             }
-
-            if (ModelState.IsValid)
+            catch (DbUpdateConcurrencyException)
             {
-                try
+                if (!LivroExists(livro.Id))
                 {
-                    _context.Update(livro);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!LivroExists(livro.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(livro);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int? id)

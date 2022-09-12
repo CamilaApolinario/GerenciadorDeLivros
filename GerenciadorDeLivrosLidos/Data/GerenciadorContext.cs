@@ -13,5 +13,9 @@ namespace GerenciadorDeLivrosLidos.Data
         public DbSet<Livro> Livros { get; set; }
         public DbSet<Autor> Autores { get; set; }
 
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+            
+        //}
     }
 }
